@@ -25,6 +25,10 @@ Background.convert()
 pg.display.set_caption("Simple Minesweeper by nevikw39")
 
 
+def dfs(i, j):
+    pass
+
+
 def main():
 
     lst = random.sample(range(81), 10)
@@ -32,17 +36,18 @@ def main():
         for j in range(9):
             e.append(grid(i, j, i * 9 + j in lst))
             Sprites.add(e[j])
-    for i in range(1, 9):
-        pg.draw.line(Background, (255, 255, 255), (i * 50, 0), (i * 50, 450), 5)
-        pg.draw.line(Background, (255, 255, 255), (0, i * 50), (450, i * 50), 5)
-        Screen.blit(Background, (0,0))
-        pg.display.update()
 
     running = True
     while running:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
+        btns = pg.mouse.get_pressed()
+        if btns[0]:
+            dfs(pg.mouse.get_pos()[0] // 50, pg.mouse.get_pos()[1] // 50)
+        elif btns[2]:
+            Tab[pg.mouse.get_pos()[0] // 50][pg.mouse.get_pos()[1] // 50].s = 1
+            Tab[pg.mouse.get_pos()[0] // 50][pg.mouse.get_pos()[1] // 50].image = pg.image.load(os.path.join("assets", "flag.png"))
         Sprites.draw(Screen)
         pg.display.update()
         Clock.tick(FPS)
