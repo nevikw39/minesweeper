@@ -8,6 +8,7 @@ from pygame import *
 from pygame.locals import MOUSEBUTTONDOWN, QUIT, USEREVENT, Color
 
 imgs = [pg.image.load(os.path.join("assets", "%d.png" % i)) for i in range(6)]
+img_flag = pg.image.load(os.path.join("assets", "flag.png"))
 
 
 class grid(pg.sprite.Sprite):
