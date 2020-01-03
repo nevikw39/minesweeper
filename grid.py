@@ -10,6 +10,7 @@ from pygame.locals import MOUSEBUTTONDOWN, QUIT, USEREVENT, Color
 imgs = [pg.image.load(os.path.join("assets", "%d.png" % i)) for i in range(6)]
 img_flag = pg.image.load(os.path.join("assets", "flag.png"))
 img_default = pg.image.load(os.path.join("assets", "default.png"))
+img_click = pg.image.load(os.path.join("assets", "click.png"))
 
 
 class grid(pg.sprite.Sprite):
