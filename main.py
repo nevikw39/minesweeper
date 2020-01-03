@@ -13,7 +13,7 @@ from pygame.locals import MOUSEBUTTONDOWN, QUIT, USEREVENT, Color
 from grid import *
 
 WINDOW_WIDTH = 450
-WINDOW_HEIGHT = 475
+WINDOW_HEIGHT = 500
 FPS = 60
 
 pg.init()
@@ -74,7 +74,6 @@ def gg():
         init()
         return True
     else:
-        pg.quit()
         return False
 
 
@@ -83,7 +82,6 @@ def win():
         init()
         return True
     else:
-        pg.quit()
         return False
 
 
@@ -128,3 +126,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    pg.quit()
