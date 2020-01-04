@@ -4,8 +4,6 @@ import sys
 import time
 
 import pygame as pg
-from pygame import *
-from pygame.locals import MOUSEBUTTONDOWN, QUIT, USEREVENT, Color
 
 imgs = [pg.image.load(os.path.join("assets", "%d.png" % i)) for i in range(6)]
 img_flag = pg.image.load(os.path.join("assets", "flag.png"))
@@ -15,11 +13,11 @@ img_click = pg.image.load(os.path.join("assets", "click.png"))
 
 class grid(pg.sprite.Sprite):
 
-    def __init__(self, i, j, is_mine):
+    def __init__(self, i, j, n, is_mine):
         super().__init__()
         self.i = i
         self.j = j
-        self.n = 0
+        self.n = n
         self.s = 0
         self.image = img_default
         self.is_mine = is_mine
@@ -34,6 +32,6 @@ class grid(pg.sprite.Sprite):
             self.s = 0
             self.image = img_default
     
-    def left_click(self, n):
-        self.n = n
-        self.image = imgs[n]
+    def left_click(self):
+        self.s = 2
+        self.image = imgs[self.n]

@@ -1,14 +1,16 @@
-from grid import *
-from pygame.locals import MOUSEBUTTONDOWN, QUIT, USEREVENT, Color
-from pygame import *
-import pygame as pg
+from datetime import datetime
 import os
 import random
 import sys
-import time
 import threading
+import time
 from tkinter import *
 from tkinter import messagebox
+
+import pygame as pg
+
+from grid import *
+
 Tk().wm_withdraw()
 
 
@@ -29,53 +31,44 @@ Background.fill((0, 0, 0))
 pg.display.set_caption("Simple Minesweeper by nevikw39")
 
 
+dx = [1, 1, 0, -1, -1, -1, 0, 1]
+dy = [0, 1, 1, 1, 0, -1, -1, -1]
+
+
 def init():
-    global Cnt, Map, Mines, Flags, Time, Timer
+    global Cnt, Map, Mines, Flags, Time
     Cnt = 10
     Map = [[] for _ in range(9)]
     Mines = set(random.sample(range(81), 10))
     Flags = set()
     Time = time.time()
-    Timer = threading.Thread(target = timer)
     for i, e in enumerate(Map):
         for j in range(9):
-            e.append(grid(i, j, i * 9 + j in Mines))
+            n = 0
+            for k in range(8):
+                x = i + dx[k]
+                y = j + dy[k]
+                if not 0 <= x < 9 or not 0 <= y < 9:
+                    continue
+                elif x * 9 + y in Mines:
+                    n += 1
+            e.append(grid(i, j, n, i * 9 + j in Mines))
             Sprites.add(e[j])
     print("Mines =", Mines)
-    Timer.start()
-
-
-dx = [1, 1, 0, -1, -1, -1, 0, 1]
-dy = [0, 1, 1, 1, 0, -1, -1, -1]
 
 
 def dfs(i, j):
-    Map[i][j].s = 2
-    n = 0
-
-    for k in range(8):
-        x = i + dx[k]
-        y = j + dy[k]
-        if not 0 <= x < 9 or not 0 <= y < 9:
-            continue
-        elif Map[x][y].is_mine:
-            n += 1
-
-    if not n:
+    Map[i][j].left_click()
+    if not Map[i][j].n:
         for k in range(8):
             x = i + dx[k]
             y = j + dy[k]
             if 0 <= x < 9 and 0 <= y < 9 and Map[x][y].s == 0:
                 dfs(x, y)
 
-    Map[i][j].left_click(n)
-
 
 def gg():
-    global Time, Timer
-    duration = time.time() - Time
-    Time = 0
-    threading.Event().set()
+    global Time
     if messagebox.askyesno('GG', '你超爛ＱＱ\n\n再來一局ㄇ？？', icon='error'):
         init()
         return True
@@ -84,23 +77,12 @@ def gg():
 
 
 def win():
-    global Time, Timer
-    duration = time.time() - Time
-    Time = 0
-    threading.Event().set()
-    if messagebox.askyesno('Win', '你贏惹 o\'_\'o\n\n再來一局ㄇ？？', icon='info'):
+    global Time
+    if messagebox.askyesno('Win', '你贏惹 o\'_\'o\n費時：' + datetime.fromtimestamp(time.time() - Time).strftime("%M:%S") + '\n再來一局ㄇ？？', icon='info'):
         init()
         return True
     else:
         return False
-
-
-def timer():
-    while True:
-        text = Font.render("Cnt = %d" % Cnt, True, (192, 192, 192))
-        Screen.blit(Background, (0, 0))
-        Screen.blit(text, (15, 465))
-        time.sleep(1)
 
 
 def main():
@@ -114,13 +96,13 @@ def main():
             elif event.type == pg.MOUSEBUTTONDOWN:
                 i, j = event.pos[0] // 50, event.pos[1] // 50
                 if not 0 <= i < 9 or not 0 <= j < 9:
-                     continue
+                    continue
                 Map[i][j].image = img_click
 
             elif event.type == pg.MOUSEBUTTONUP:
                 i, j = event.pos[0] // 50, event.pos[1] // 50
                 if not 0 <= i < 9 or not 0 <= j < 9:
-                     continue
+                    continue
                 if event.button == 1:
                     if (i * 9 + j in Mines):
                         if gg():
@@ -144,6 +126,10 @@ def main():
                         else:
                             return
 
+        text = Font.render("Cnt: %2d   Time: " % Cnt + datetime.fromtimestamp(time.time() - Time).strftime("%M:%S     "), True,
+                           (192, 192, 192), (0, 0, 0))
+        Screen.blit(text, (15, 465))
+        pg.display.update()
         Sprites.draw(Screen)
         pg.display.update()
         Clock.tick(FPS)
