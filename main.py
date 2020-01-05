@@ -58,6 +58,7 @@ def init():
 
 
 def dfs(i, j):
+    global Map, Mines
     Map[i][j].left_click()
     if not Map[i][j].n:
         for k in range(8):
@@ -97,7 +98,12 @@ def main():
                 i, j = event.pos[0] // 50, event.pos[1] // 50
                 if not 0 <= i < 9 or not 0 <= j < 9:
                     continue
+                t = Map[i][j].image
                 Map[i][j].image = img_click
+                Sprites.draw(Screen)
+                pg.display.update()
+                Clock.tick(10)
+                Map[i][j].image = t
 
             elif event.type == pg.MOUSEBUTTONUP:
                 i, j = event.pos[0] // 50, event.pos[1] // 50
@@ -129,7 +135,6 @@ def main():
         text = Font.render("Cnt: %2d   Time: " % Cnt + datetime.fromtimestamp(time.time() - Time).strftime("%M:%S     "), True,
                            (192, 192, 192), (0, 0, 0))
         Screen.blit(text, (15, 465))
-        pg.display.update()
         Sprites.draw(Screen)
         pg.display.update()
         Clock.tick(FPS)
