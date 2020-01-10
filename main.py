@@ -2,7 +2,6 @@ from datetime import datetime
 import os
 import random
 import sys
-import threading
 import time
 from tkinter import *
 from tkinter import messagebox
@@ -93,11 +92,11 @@ def main():
             if event.type == pg.QUIT:
                 return
 
-            elif event.type == pg.MOUSEBUTTONDOWN:
-                i, j = event.pos[0] // 50, event.pos[1] // 50
-                if not 0 <= i < 9 or not 0 <= j < 9:
-                    continue
-                Map[i][j].image = img_click
+            # elif event.type == pg.MOUSEBUTTONDOWN:
+            #     i, j = event.pos[0] // 50, event.pos[1] // 50
+            #     if not 0 <= i < 9 or not 0 <= j < 9:
+            #         continue
+            #     Map[i][j].image = img_click
 
             elif event.type == pg.MOUSEBUTTONUP:
                 i, j = event.pos[0] // 50, event.pos[1] // 50
