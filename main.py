@@ -1,10 +1,10 @@
+#!/usr/bin/python3
 import os
 import random
 import sys
 import time
 from datetime import datetime
 from tkinter import *
-from tkinter import messagebox
 
 import pygame as pg
 
@@ -47,7 +47,7 @@ def init():
                     continue
                 elif x * 9 + y in Mines:
                     n += 1
-            e.append(Grid(i, j, n, i * 9 + j in Mines))
+            e.append(Grid(i, j, n))
             Sprites.add(e[j])
     print("Mines =", Mines)
 
@@ -71,8 +71,7 @@ def dfs(i, j):
         for k in range(8):
             x = i + dx[k]
             y = j + dy[k]
-            if 0 <= x < 9 and 0 <= y < 9 and Map[x][y].s == 1:
-                n += 1
+            n += 0 <= x < 9 and 0 <= y < 9 and Map[x][y].s == 1
         if Map[i][j].n == n:
             for k in range(8):
                 x = i + dx[k]
@@ -125,13 +124,22 @@ def main():
                         else:
                             return
                 elif event.button == 3:
-                    n = 0
+                    Cnt += Map[i][j].right_click()
                     for k in range(8):
                         x = i + dx[k]
                         y = j + dy[k]
-                        if 0 <= x < 9 and 0 <= y < 9 and Map[x][y].s == 1:
-                            n += 1
-                    Cnt += Map[i][j].right_click(n)
+                        n = 0
+                        if 0 <= x < 9 and 0 <= y < 9:
+                            if Map[x][y].s == 2:
+                                m = 0
+                                for l in range(8):
+                                    p = x + dx[l]
+                                    q = y + dy[l]
+                                    m += 0 <= p < 9 and 0 <= q < 9 and Map[p][q].s == 1
+                                Map[x][y].check_conflict(m)
+                            elif Map[x][y].s == 1:
+                                n += 1
+                    Map[i][j].check_conflict(n)
 
         text = Font.render("Cnt: %2d   Time: " % Cnt + datetime.fromtimestamp(time.time() - Time).strftime("%M:%S     "), True,
                            (192, 192, 192), (0, 0, 0))
@@ -144,7 +152,7 @@ def main():
                 continue
             else:
                 return
-        
+
         Clock.tick(FPS)
 
 
