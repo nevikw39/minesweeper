@@ -1,10 +1,11 @@
-#!/usr/bin/python3
+#!/usr/local/opt/python/bin/python3.7
 import os
 import random
 import sys
 import time
 from datetime import datetime
 from tkinter import *
+from tkinter import messagebox
 
 import pygame as pg
 
@@ -21,6 +22,7 @@ Font = pg.font.Font(None, 24)
 FPS = 60
 Sprites = pg.sprite.Group()
 Screen = pg.display.set_mode((450, 500))
+Grid.init()
 Background = pg.Surface(Screen.get_size())
 Background.convert()
 Background.fill((0, 0, 0))
@@ -52,7 +54,7 @@ def init():
     print("Mines =", Mines)
 
 
-def dfs(i, j):
+def dfs(i: int, j: int):
     if Map[i][j].s == 1:
         return True
     elif i * 9 + j in Mines:
@@ -81,18 +83,11 @@ def dfs(i, j):
     return True
 
 
-def gg():
+def gg(win: bool):
     global Time
-    if messagebox.askyesno('GG', '你超爛ＱＱ\n\n再來一局ㄇ？？', icon='error'):
-        init()
-        return True
-    else:
-        return False
-
-
-def win():
-    global Time
-    if messagebox.askyesno('Win', '你贏惹 o\'_\'o\n費時：' + datetime.fromtimestamp(time.time() - Time).strftime("%M:%S") + '\n再來一局ㄇ？？', icon='info'):
+    strs = [['GG', '你超爛ＱＱ\n\n再來一局ㄇ？？', 'error'], ['Win', '你贏惹 o\'_\'o\n費時：' +
+                                                  datetime.fromtimestamp(time.time() - Time).strftime("%M:%S") + '\n再來一局ㄇ？？', 'info']]
+    if messagebox.askyesno(strs[win][0], strs[win][1], icon=strs[win][2]):
         init()
         return True
     else:
@@ -119,7 +114,7 @@ def main():
                     continue
                 if event.button == 1:
                     if not dfs(i, j):
-                        if gg():
+                        if gg(False):
                             continue
                         else:
                             return
@@ -136,10 +131,10 @@ def main():
                                     p = x + dx[l]
                                     q = y + dy[l]
                                     m += 0 <= p < 9 and 0 <= q < 9 and Map[p][q].s == 1
-                                Map[x][y].check_conflict(m)
+                                # Map[x][y].check_conflict(m)
                             elif Map[x][y].s == 1:
                                 n += 1
-                    Map[i][j].check_conflict(n)
+                    # Map[i][j].check_conflict(n)
 
         text = Font.render("Cnt: %2d   Time: " % Cnt + datetime.fromtimestamp(time.time() - Time).strftime("%M:%S     "), True,
                            (192, 192, 192), (0, 0, 0))
@@ -148,7 +143,7 @@ def main():
         pg.display.update()
 
         if Lst == Mines:
-            if win():
+            if gg(True):
                 continue
             else:
                 return
