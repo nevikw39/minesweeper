@@ -28,11 +28,13 @@ Background.convert()
 Background.fill((0, 0, 0))
 
 
+# 數地雷與 dfs 所需之八個方向分量
 dx = [1, 1, 0, -1, -1, -1, 0, 1]
 dy = [0, 1, 1, 1, 0, -1, -1, -1]
 
 
 def init():
+    """遊戲初始化．"""
     global Cnt, Map, Mines, Lst, Time
     Cnt = 10
     Map = [[] for _ in range(9)]
@@ -55,6 +57,16 @@ def init():
 
 
 def dfs(i: int, j: int):
+    """以「深度優先搜尋」找出連通的無雷區．
+
+    Args:
+        i: 從第幾列開始
+        j: 從第幾行開始
+
+    Returns:
+        True，當沒踩到雷．
+        False，當踩到雷．
+    """
     if Map[i][j].s == 1:
         return True
     elif i * 9 + j in Mines:
@@ -84,6 +96,15 @@ def dfs(i: int, j: int):
 
 
 def gg(win: bool):
+    """詢問是否再來一局．
+
+    Args:
+        win: 是輸或贏．
+    
+    Returns:
+        True，當使用者要再來一局．
+        False，當使用者不要再來一局．
+    """
     global Time
     strs = [['GG', '你超爛ＱＱ\n\n再來一局ㄇ？？', 'error'], ['Win', '你贏惹 o\'_\'o\n費時：' +
                                                   datetime.fromtimestamp(time.time() - Time).strftime("%M:%S") + '\n再來一局ㄇ？？', 'info']]
@@ -95,6 +116,7 @@ def gg(win: bool):
 
 
 def main():
+    """遊戲主函式．"""
     global Cnt, Lst
     init()
     while True:
