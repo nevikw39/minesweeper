@@ -76,11 +76,3 @@ class Grid(pg.sprite.Sprite):
         snd_click.play()
         self.s = 2
         self.image = imgs[self.n]
-
-    def click(self):
-        """一般點擊．"""
-        t = self.image
-        self.image = img_click
-        pg.display.update()
-        time.sleep(0.1)
-        self.image = t

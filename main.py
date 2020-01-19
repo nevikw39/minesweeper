@@ -91,7 +91,8 @@ def dfs(i: int, j: int):
                 x = i + dx[k]
                 y = j + dy[k]
                 if 0 <= x < 9 and 0 <= y < 9 and Map[x][y].s == 0:
-                    dfs(x, y)
+                    if not dfs(x, y):
+                        return False
     return True
 
 
@@ -124,12 +125,6 @@ def main():
             if event.type == pg.QUIT:
                 return
 
-            elif event.type == pg.MOUSEBUTTONDOWN:
-                i, j = event.pos[0] // 50, event.pos[1] // 50
-                if not 0 <= i < 9 or not 0 <= j < 9:
-                    continue
-                Map[i][j].click()
-
             elif event.type == pg.MOUSEBUTTONUP:
                 i, j = event.pos[0] // 50, event.pos[1] // 50
                 if not 0 <= i < 9 or not 0 <= j < 9:
@@ -142,21 +137,6 @@ def main():
                             return
                 elif event.button == 3:
                     Cnt += Map[i][j].right_click()
-                    for k in range(8):
-                        x = i + dx[k]
-                        y = j + dy[k]
-                        n = 0
-                        if 0 <= x < 9 and 0 <= y < 9:
-                            if Map[x][y].s == 2:
-                                m = 0
-                                for l in range(8):
-                                    p = x + dx[l]
-                                    q = y + dy[l]
-                                    m += 0 <= p < 9 and 0 <= q < 9 and Map[p][q].s == 1
-                                # Map[x][y].check_conflict(m)
-                            elif Map[x][y].s == 1:
-                                n += 1
-                    # Map[i][j].check_conflict(n)
 
         text = Font.render("Cnt: %2d   Time: " % Cnt + datetime.fromtimestamp(time.time() - Time).strftime("%M:%S     "), True,
                            (192, 192, 192), (0, 0, 0))
